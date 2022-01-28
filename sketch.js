@@ -70,12 +70,14 @@ function processDFT() {
     document.querySelector('#button_dft').disabled = false;
 }
 
-function dft(
-    a   // [入力] 実数数値列としての信号
-) {
+// Reference
+// http://docolog.cocolog-nifty.com/papalog/2014/03/post-3de1.html
+// 一部変更を加えています
+function dft(a) {
     var Re = [];// [出力] 実数部
     var Im = [];// [出力] 虚数部
     var powers = [];
+
     // dft
     var N = a.length;
     for (var j = 0; j < N; ++j) {
@@ -85,10 +87,10 @@ function dft(
             var tht = 2 * Math.PI / N * j * i;
             Re_sum += a[i] * Math.cos(tht);
             Im_sum += a[i] * Math.sin(tht);
-        }// i
+        }
         Re.push(Re_sum);
         Im.push(Im_sum);
         powers.push(Math.sqrt(Math.pow(Re_sum, 2) + Math.pow(Im_sum, 2)));
-    }// j
+    }
     return powers;
 }
