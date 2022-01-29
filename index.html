@@ -14,12 +14,26 @@
 </head>
 
 <body>
-    <div class="container-sm">
-        <h1 class="mt-4 mb-0">DFTable</h1>
+    <div class="container-fluid">
+        <h1 class="mt-4 mb-0">
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor"
+                class="bi bi-soundwave mb-2" viewBox="0 0 16 16">
+                <path fill-rule="evenodd"
+                    d="M8.5 2a.5.5 0 0 1 .5.5v11a.5.5 0 0 1-1 0v-11a.5.5 0 0 1 .5-.5zm-2 2a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zm4 0a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zm-6 1.5A.5.5 0 0 1 5 6v4a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm8 0a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm-10 1A.5.5 0 0 1 3 7v2a.5.5 0 0 1-1 0V7a.5.5 0 0 1 .5-.5zm12 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0V7a.5.5 0 0 1 .5-.5z" />
+            </svg>
+            DFTable
+        </h1>
         <p class="text-muted small">
             Easy to get the result of DFT with your CSV file data.<br>
-            CSV samples: [ <a href="./sample.csv">sample.csv</a>, <a href="./randomnoise.csv">randomnoise.csv</a> ]
+            CSV samples: [ <a href="./sample.csv">sample.csv</a>, <a href="sin.csv">sin.csv</a>, <a
+                href="./randomnoise.csv">randomnoise.csv</a> ]
         </p>
+
+        <div class="form-floating mb-3">
+            <input type="number" class="form-control" placeholder="256" id="sampling_rate" value="256">
+            <label for="floatingInput">Data Sampling Rate [Hz]</label>
+        </div>
+
 
         <div class="row">
             <div class="col-6">
@@ -28,38 +42,63 @@
                 </div>
             </div>
             <div class="col-6">
-                <div class="input-group mb-3">
-                    <span class="input-group-text" id="basic-addon1">Sampling Rate [Hz]</span>
-                    <input type="number" class="form-control" placeholder="--" aria-label="sampling_rate"
-                        aria-describedby="basic-addon1" id="sampling_rate" disabled>
+                <p id="data_size"></p>
+            </div>
+        </div>
+
+        <div hidden id="warning" class="alert alert-warning alert-dismissible fade show" role="alert">
+            <strong>Warning: </strong> The number of data exceeds 10,000. It may take some time to calculate. Please use
+            the Decrement Data option if necessary.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <hr>
+
+            <div class="row">
+                <div class="col-6">
+                    <strong>Decrement Option:</strong> <br>set data size ( 1 / <input class="" type="number"
+                        id="decrement" value="1" min="1" max="100" width=2 onchange="recalcSamplingRate(this.value)">)
+                </div>
+                <div class="col-6">
+                    <strong>data size: </strong><span id="new_data_size"></span>
                 </div>
             </div>
         </div>
 
+
+
         <div class="d-grid gap-2 col-6 mx-auto">
-            <button class="btn btn-danger" id="button_dft" ype="button" onclick='processDFT();' disabled>Process
-                DFT</button>
+            <button class="btn btn-danger" id="button_dft" ype="button" onclick='processDFT();' disabled>
+                <div hidden id="icon_loading" class="spinner-border spinner-border-sm" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                Process DFT
+            </button>
         </div>
-        <div id="myDiv"></div>
-        <div id="result_dft">
 
+        <hr>
+        <div class="row">
+            <div class="col-6">
+                <div id="myDiv"></div>
+            </div>
+            <div class="col-6">
+                <div id="result_dft">
+                </div>
+            </div>
         </div>
-    </div>
 
-    <!-- Optional JavaScript; choose one of the two! -->
+        <!-- Optional JavaScript; choose one of the two! -->
 
-    <!-- Option 1: Bootstrap Bundle with Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
-        crossorigin="anonymous"></script>
+        <!-- Option 1: Bootstrap Bundle with Popper -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+            crossorigin="anonymous"></script>
 
-    <!-- Option 2: Separate Popper and Bootstrap JS -->
-    <!--
+        <!-- Option 2: Separate Popper and Bootstrap JS -->
+        <!--
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
     -->
-    <script src="https://cdn.plot.ly/plotly-2.8.3.min.js"></script>
-    <script src="sketch.js"></script>
+        <script src="https://cdn.plot.ly/plotly-2.8.3.min.js"></script>
+        <script src="sketch.js"></script>
 </body>
 
 </html>

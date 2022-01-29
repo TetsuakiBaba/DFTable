@@ -1,5 +1,3 @@
-for (let i = 0; i < 2 * Math.PI * 100; i += 0.8) {
+for (let i = 0.0; i < 2 * Math.PI; i += 0.01) {
     console.log(Math.sin(i));
-
-    //console.log(Math.random(1.0));
 }
